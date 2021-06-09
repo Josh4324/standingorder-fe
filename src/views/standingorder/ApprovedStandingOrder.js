@@ -68,7 +68,6 @@ const ApprovedStandingOrder = () => {
       }),
     }).then(response => response.json())
     .then(data => {
-        console.log(data);
         if (data.status === "Success"){
             NotificationManager.success("Stand order cancelled, awaiting deactivation approval", "Success");
             setTimeout(() => {
@@ -190,7 +189,6 @@ const getData = () => {
     },
 }).then(response => response.json())
 .then(data => {
-  console.log('Success:', data);
   setData(data.data);
   setLoading(false);
 })

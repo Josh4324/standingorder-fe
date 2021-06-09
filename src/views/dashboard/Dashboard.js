@@ -22,16 +22,13 @@ const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
 
 
 const Dashboard = () => {
-  console.log(api_base_url);
-  let history = useHistory();
-  let selectRef = useRef(null);
 
   let role = localStorage.getItem('role').split(",")
   let inputterCheck = role.includes("inputter");
-  //let approverCheck = role.includes("approver");
- // let adminCheck = role.includes("admin");
-  let adminCheck = false;
-  let approverCheck = false;
+  let approverCheck = role.includes("approver");
+  let adminCheck = role.includes("admin");
+  //let approverCheck = false;
+  //let inputterCheck = false;
   
   
   const [standingOrder, setStandingOrder] = useState(0);
@@ -59,7 +56,6 @@ fetch(`${api_base_url}/api/standorder/stat`, {
   },
 }).then(response => response.json())
 .then(data => {
-console.log('Success:', data);
 setStandingOrder(data.data.standingOrder);
 setPending(data.data.pending);
 setApproved(data.data.approved);
@@ -74,7 +70,7 @@ setAdminPending(data.data.adminPending);
 setAdminDeclined(data.data.adminDeclined);
 
 }).catch((err) => {
-    console.log(err)
+   
 })
 }
 

@@ -2,7 +2,6 @@ import React, { lazy, useState, useEffect, useRef } from 'react'
 import ReactDatatable from '@ashvin27/react-datatable';
 import Moment from 'moment';
 import { useHistory } from "react-router-dom";
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import {api_base_url} from '../../utils/constant';
 import {
   CBadge,
@@ -17,9 +16,6 @@ import {
   CRow,
   CCallout
 } from '@coreui/react'
-import NotificationManager from 'react-notifications/lib/NotificationManager';
-import ReactPDF from '@react-pdf/renderer';
-import { jsPDF } from "jspdf";
 
 
 
@@ -30,31 +26,29 @@ const Transaction = () => {
   const token = localStorage.getItem('stand-order-token');
     let [data, setData]  = useState([]);
     let [loading, setLoading] = useState(true);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    let [filterdata, setFilterData] = useState([]);
+    let [link, setLink] = useState("");
 
 
     const generatePDF = (record) => {
-      const doc = new jsPDF('p', 'pt');
-      
-      doc.setFontSize(22);
-      doc.text(20, 20, 'Transaction Receipt.');
 
-      let transact = "Transaction ID:" + record['transaction_id'];
-      let amount = "Amount:" + String(record['amount']);
-      let date = "Date:" + String(record['date']);
-      
-      doc.text(20, 60, transact)
-      doc.text(20, 100, amount)
-      doc.text(20, 140, date)  
-
-      
-      doc.save('receipt.pdf')
+      fetch(`${api_base_url}/api/receipt`, {
+      method: 'POST', // or 'PUT'
+      headers: {
+          'Content-Type': 'application/json',
+          authorization: token
+      },
+      body: JSON.stringify({
+        "transId": record['transaction_id'], 
+        "standOrderId": record['stand_order_id'],
+      }),
+    }).then(response => response.json())
+    .then(data => {
+      window.open(`${api_base_url}/${data}`, '_blank')
+    })
+    .catch((error) => {
+    console.error('Error:', error);
+    });
     }   
-
-
-
 
     const columns = [
       {
@@ -142,7 +136,6 @@ const getData = () => {
     },
 }).then(response => response.json())
 .then(data => {
-  console.log('Success:', data);
   setData(data.data);
   setLoading(false);
 })

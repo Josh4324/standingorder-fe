@@ -1,6 +1,6 @@
 {
-  "short_name": "CoreUI-React",
-  "name": "CoreUI-React sample",
+  "short_name": "Standing Order Application",
+  "name": "Standing Order",
   "icons": [
     {
       "src": "./assets/img/favicon.png",

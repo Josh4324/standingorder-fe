@@ -54,7 +54,7 @@ const AdminCancelledStandingOrder = () => {
       }),
     }).then(response => response.json())
     .then(data => {
-        console.log(data);
+      
         if (data.status === "Success"){
             NotificationManager.success("Stand order deactivated", "Success");
             setTimeout(() => {
@@ -149,22 +149,6 @@ const AdminCancelledStandingOrder = () => {
                   style={{marginRight: '5px', fontSize:"12px"}}>
                       View Details
                 </button> 
-                {
-                  approverCheck === true ? (
-                    (record.status === "cancelled") && record.delete_status !== "true" ?  <button
-                  className="btn btn-primary btn-sm"
-                  onClick={() => popDeactivate(record["stand_order_id"])}
-                  style={{marginRight: '5px'}}>
-                      Approve Deactivation
-              </button> :  <button disabled
-                  className="btn btn-primary btn-sm"
-                  style={{marginRight: '5px',fontSize:"12px"}}>
-                      Deactivated
-              </button>
-                  ) : null
-                  
-                }  
-                    
                 </>
             );
         }
@@ -196,12 +180,11 @@ const getData = () => {
     },
 }).then(response => response.json())
 .then(data => {
-  console.log('Success:', data);
   setData(data.data);
   setLoading(false);
 })
 .catch((error) => {
-  console.error('Error:', error);
+ 
 });
 }
 

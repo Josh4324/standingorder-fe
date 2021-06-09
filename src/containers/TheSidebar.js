@@ -24,13 +24,12 @@ const TheSidebar = () => {
   const show = useSelector(state => state.sidebarShow)
   let role = localStorage.getItem('role').split(",")
   let inputterCheck = role.includes("inputter");
-  //let approverCheck = role.includes("approver");
-  //let adminCheck = role.includes("admin");
-  let adminCheck = false;
-  let approverCheck = false;
+  let approverCheck = role.includes("approver");
+  let adminCheck = role.includes("admin");
+  //let approverCheck = false;
+  //let inputterCheck = false;
   let navlist = [];
 
-  console.log(navigation)
   if (inputterCheck){
     navlist.push(navigation[0])
     navlist.push(navigation[1])
@@ -49,6 +48,7 @@ const TheSidebar = () => {
    
     navlist.push(navigation[8])
     navlist.push(navigation[9])
+    navlist.push(navigation[10])
     navlist.push(navigation[11])
     navlist.push(navigation[12])
     navlist.push(navigation[14])

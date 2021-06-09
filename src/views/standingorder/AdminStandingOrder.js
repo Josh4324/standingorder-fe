@@ -30,9 +30,9 @@ const AdminStandingOrder = () => {
   let selectRef = useRef();
 
   let role = localStorage.getItem('role').split(",")
-  //let inputterCheck = role.includes("inputter");
+  let inputterCheck = role.includes("inputter");
   let approverCheck = role.includes("approver");
-  let inputterCheck = false;
+ 
 
   
   const token = localStorage.getItem('stand-order-token')
@@ -120,7 +120,6 @@ const AdminStandingOrder = () => {
           newData = filterdata
         }
         
-        console.log(newData);
         setData(newData);
       }
      
@@ -138,7 +137,7 @@ const AdminStandingOrder = () => {
       }),
     }).then(response => response.json())
     .then(data => {
-        console.log(data);
+       
         if (data.status === "Success"){
             NotificationManager.success("Stand order deactivated", "Success");
             setTimeout(() => {

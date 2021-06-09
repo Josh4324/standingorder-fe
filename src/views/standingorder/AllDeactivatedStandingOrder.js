@@ -133,7 +133,7 @@ const getData = () => {
     },
 }).then(response => response.json())
 .then(data => {
-  console.log('Success:', data);
+  
   setData(data.data);
   setLoading(false);
 })

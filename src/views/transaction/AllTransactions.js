@@ -75,6 +75,22 @@ const Transaction = () => {
         sortable: true,
          
       },
+      {
+        key: "action",
+        text: "Action",
+        cell: (record, index) => {
+            return (
+                <>
+                <button  className="btn btn-primary btn-sm" onClick={() => generatePDF(record)}
+                    className="btn btn-primary"
+                    style={{marginRight: '5px', fontSize:"12px"}}>
+                        <span>Download Receipt</span>
+                </button> 
+                    
+                </>
+            );
+        }
+    }
     
       
   ];
@@ -94,6 +110,27 @@ const Transaction = () => {
   }
 }
 
+const generatePDF = (record) => {
+
+  fetch(`${api_base_url}/api/receipt`, {
+  method: 'POST', // or 'PUT'
+  headers: {
+      'Content-Type': 'application/json',
+      authorization: token
+  },
+  body: JSON.stringify({
+    "transId": record['transaction_id'], 
+    "standOrderId": record['stand_order_id'],
+  }),
+}).then(response => response.json())
+.then(data => {
+  window.open(`${api_base_url}/${data}`, '_blank')
+})
+.catch((error) => {
+console.error('Error:', error);
+});
+}   
+
 
 const getData = () => {
   fetch(`${api_base_url}/api/transactions`, {
@@ -104,7 +141,6 @@ const getData = () => {
     },
 }).then(response => response.json())
 .then(data => {
-  console.log('Success:', data);
   setData(data.data);
   setLoading(false);
 })

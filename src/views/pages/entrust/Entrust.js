@@ -1,7 +1,4 @@
 import React, {useRef, useState} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import {addAuth} from '../../../actions/auth';
 import { useHistory } from "react-router-dom";
 import Logo from '../../../assets/logo.svg';
 import { NotificationManager} from 'react-notifications';
@@ -40,17 +37,12 @@ const Entrust = () => {
     debounce: 500
   })
 
- 
-  
-  const userRef = useRef();
   const responseRef = useRef();
   const [error, setError] = useState("");
   const [loader, setLoader] = useState(false);
  
-  const login = (evt) => {
+  const entrustlogin = (evt) => {
     evt.preventDefault();
-    console.log(localStorage.getItem("userId"));
-    console.log( responseRef.current.value)
     setError("");
     setLoader(true);
     fetch(`${api_base_url}/api/user/auth/securepass`, {
@@ -65,7 +57,6 @@ const Entrust = () => {
     }).then(response => response.json())
     .then(data => {
     setLoader(false);
-    console.log(data)
     if (data.responseCode === 200){
       localStorage.setItem("stand-order-token", data.token);
       history.push('/');
@@ -95,7 +86,7 @@ const Entrust = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm onSubmit={login}>
+                  <CForm onSubmit={entrustlogin}>
                     <h3 className="py-3" style={{color:"orange"}}>Entrust Authentication</h3>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>

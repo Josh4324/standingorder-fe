@@ -25,9 +25,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 const AllPendingStandingOrder = () => {
 
   let history = useHistory();
-  let selectRef = useRef();
 
-  
   const token = localStorage.getItem('stand-order-token')
     let [data, setData]  = useState([]);
     let [loading, setLoading] = useState(true);
@@ -37,10 +35,14 @@ const AllPendingStandingOrder = () => {
         setModalData(data);
     }
 
+
     let role = localStorage.getItem('role').split(",")
-  //let inputterCheck = role.includes("inputter");
-  let approverCheck = role.includes("approver");
-  let inputterCheck = false;
+    let approverCheck = role.includes("approver");
+
+    if (approverCheck !== true){
+       history.push("/dashboard");
+    }
+    
 
     
     const approve = (id) => {
@@ -56,7 +58,7 @@ const AllPendingStandingOrder = () => {
       }),
     }).then(response => response.json())
     .then(data => {
-        console.log(data);
+       
         if (data.status === "Success"){
             NotificationManager.success("Stand order approved", "Success");
             setTimeout(() => {
@@ -85,7 +87,7 @@ const AllPendingStandingOrder = () => {
     }),
   }).then(response => response.json())
   .then(data => {
-      console.log(data);
+     
       if (data.status === "Success"){
           NotificationManager.success("Stand order declined", "Success");
           setTimeout(() => {
@@ -165,7 +167,7 @@ const AllPendingStandingOrder = () => {
       }),
     }).then(response => response.json())
     .then(data => {
-        console.log(data);
+       
         if (data.status === "Success"){
             NotificationManager.success("Stand order deactivated", "Success");
             setTimeout(() => {
@@ -317,7 +319,7 @@ const getData = () => {
     },
 }).then(response => response.json())
 .then(data => {
-  console.log('Success:', data);
+  
   setData(data.data);
   setLoading(false);
 })

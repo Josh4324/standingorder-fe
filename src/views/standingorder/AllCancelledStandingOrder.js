@@ -54,7 +54,7 @@ const AllCancelledStandingOrder = () => {
       }),
     }).then(response => response.json())
     .then(data => {
-        console.log(data);
+        
         if (data.status === "Success"){
             NotificationManager.success("Stand order deactivated", "Success");
             setTimeout(() => {
@@ -196,7 +196,7 @@ const getData = () => {
     },
 }).then(response => response.json())
 .then(data => {
-  console.log('Success:', data);
+
   setData(data.data);
   setLoading(false);
 })

@@ -14,6 +14,10 @@ import { useIdleTimer } from 'react-idle-timer';
 const TheLayout = () => {
   let history = useHistory();
 
+  if (localStorage.getItem("stand-order-token") === null){
+      history.push("/login")
+  }
+
   const handleOnIdle = event => {
     //console.log('user is idle',)
     //console.log('last active', getLastActiveTime())

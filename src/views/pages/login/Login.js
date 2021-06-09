@@ -1,10 +1,6 @@
 import React, {useRef, useState} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import {addAuth} from '../../../actions/auth';
 import { useHistory } from "react-router-dom";
 import Logo from '../../../assets/logo.svg';
-import { NotificationManager} from 'react-notifications';
 import {api_base_url} from '../../../utils/constant';
 import {
   CButton,

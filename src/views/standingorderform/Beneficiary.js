@@ -67,7 +67,6 @@ const Beneficiary = (props) => {
       }).then(response => response.json())
       .then(data => {
         setAccLoader(false)
-        console.log(data);
         if (data.accountName === ""){
           setError("INVALID ACCOUNT");
           setAccountname("");
@@ -79,7 +78,6 @@ const Beneficiary = (props) => {
         }
       })
       .catch((error) => {
-      console.error('Error:', error);
       setError("An error occurred");
       });
   }
@@ -196,16 +194,16 @@ const Beneficiary = (props) => {
                         (evt) => {
                           props.handleChange(evt, props.id);
                           props.getBalance(evt);
-                          console.log("props", props.id);
                           props.removeOthers(props.id);
                           setDisableStand(true);
                         }} name="move" value="Yes" data-key={props.id} />
                 <label className="px-2" for="yes">Yes</label>
                 <input type="radio" id="no" onChange={
                         (evt) => {
-                          //props.handleChange(evt, props.id);
                           setDisableStand(false);
-                        }} name="move" value="No" />
+                          props.handleChange(evt, props.id);
+                          props.setBen();
+                        }} name="move" value="No" data-key={props.id}/>
                 <label className="px-2" for="no">No</label>
               </div>
               

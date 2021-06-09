@@ -99,20 +99,16 @@ const StandingOrderForm = () => {
         }),
       }).then(response => response.json())
       .then(data => {
-        console.log(data);
         let amount = Number(data.balance) - 54.75
         setBalance(amount);
       })
       .catch((error) => {
-      console.error('Error:', error);
       //setError("An error occurred");
       });
   }
 
 
   const removeOthers = (itemId) => {
-
-    console.log(beneficiaryList)
     const newList = beneficiaryList.filter((item, index, array) => {
       return itemId === index
     })
@@ -123,7 +119,10 @@ const StandingOrderForm = () => {
     setData([...data2]);
     setBeneficiaryList([...newList]);
     setDisableBen(true)
-    console.log(beneficiaryList)
+  }
+
+  const setBen = () => {
+    setDisableBen(false);
   }
 
   const checkInternal = () => {
@@ -143,14 +142,28 @@ const StandingOrderForm = () => {
       }).then(response => response.json())
       .then(data => {
         setAccLoader(false)
-        if (data.accountName === "INVALID ACCOUNT"){
+        if (JSON.stringify(data.accountName) === "{}"){
+          setAccountname("");
           setError("INVALID ACCOUNT");
         }else {
-          setAccountname(data.accountName)
+          setAccountname(data.accountName.AccountName)
+         
+          if (Number(data.accountName.AccountProductCode) < 4 || Number(data.accountName.AccountProductCode) > 99){
+            NotificationManager.error('This account is not eligible to create a standing order', 'Error');
+            setTimeout(() => {
+              history.push("/");
+            }, 3000)
+          }
+
+          if (Number(data.accountName.CustomerID) < 20000){
+            NotificationManager.error('This account is not eligible to create a standing order', 'Error');
+            setTimeout(() => {
+              history.push("/");
+            }, 3000)
+          }
         }
       })
       .catch((error) => {
-      console.error('Error:', error);
       setError("An error occurred");
       });
     }
@@ -173,8 +186,6 @@ const StandingOrderForm = () => {
     }else{
       datalist = data
     }
-
-    console.log(datalist)
 
    datalist.map((item) => {
      let narration = "From " + accountname + " | " + "Remarks - " + item.remark 
@@ -200,8 +211,6 @@ const StandingOrderForm = () => {
       }).then(response => response.json())
       .then(data => {
         setFormLoader(false);
-        console.log(data);
-        console.log("success")
         setLoader(false)
         if (data.status === "Success"){
           NotificationManager.success('Standing Order created successfully', 'Success');
@@ -220,7 +229,6 @@ const StandingOrderForm = () => {
       .catch((error) => {
         setFormLoader(false);
       NotificationManager.error('An error occured', 'Error');
-      console.error('Error:', error);
       }); 
     })
     
@@ -229,14 +237,8 @@ const StandingOrderForm = () => {
   const formRef = useRef();
 
   const handleChange = (evt, key,) => {
-    evt.preventDefault();
       let name = evt.target.name;
-      console.log(name)
       let value = evt.target.value;
-      console.log(value)
-      console.log(evt.target)
-      console.log("key",key)
-      console.log("data key", evt.target.dataset.key)
       if (Number(evt.target.dataset.key) === key){
           data[key] = {
             ...data[key],
@@ -244,7 +246,6 @@ const StandingOrderForm = () => {
           }
         }
       setData([...data])
-      console.log(data)
   }
 
 
@@ -257,7 +258,6 @@ const StandingOrderForm = () => {
       }
     }
   setData([...data])
-  console.log(data)
   }
  
   const reset = () => {
@@ -310,6 +310,7 @@ const StandingOrderForm = () => {
                 benNum={beneficiaryList.length} 
                 id={id} 
                 token={token}
+                setBen={setBen}
                 getBalance={getBalance}
                 remove={onRemove} />
               })
