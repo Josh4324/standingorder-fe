@@ -30,6 +30,13 @@ const Login = () => {
   const passRef = useRef();
   const [error, setError] = useState("");
   const [loader, setLoader] = useState(false);
+
+  const sendToken = (evt) => {
+    evt.preventDefault();
+    setError("");
+    setLoader(true);
+  
+  }
  
   const login = (evt) => {
     evt.preventDefault();
@@ -46,11 +53,29 @@ const Login = () => {
       }),
     }).then(response => response.json())
     .then(data => {
-    setLoader(false);
     if (data.data.responseCode === "00"){
       localStorage.setItem("userId", data.data.userId)
       localStorage.setItem("role", data.data.roleaccess)
-      history.push('/entrust/validation');
+      localStorage.setItem("stand-order-token", data.token);
+      fetch(`http://10.10.1.74:199/sendOTP`, {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "username": localStorage.getItem("userId")
+        }),
+      }).then(response => response.json())
+      .then(data => {
+        setLoader(false);
+        localStorage.setItem('usercode', data.userCode)
+        history.push('/entrust/validation');
+      })
+      .catch((error) => {
+      setLoader(false);
+      setError("An error occured, please try again");
+      });
+     
     }else{
       setError("Email and Password Incorrect");
       history.push('/login');
@@ -59,7 +84,6 @@ const Login = () => {
     .catch((error) => {
     setLoader(false);
     setError("Email and Password Incorrect");
-    console.error('Error:', error);
     });
   }
 

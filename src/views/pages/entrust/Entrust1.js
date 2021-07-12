@@ -40,7 +40,6 @@ const Entrust = () => {
   const responseRef = useRef();
   const [error, setError] = useState("");
   const [loader, setLoader] = useState(false);
-  const [button, setButton] = useState(false);
  
   const entrustlogin = (evt) => {
     evt.preventDefault();
@@ -72,64 +71,7 @@ const Entrust = () => {
     });
   }
 
-  const resend = () => {
-    setLoader(true);
-    setError("");
-    console.log(localStorage.getItem("userId"))
-    fetch(`http://10.10.1.74:199/sendOTP`, {
-        method: 'POST', // or 'PUT'
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          "username": localStorage.getItem("userId")
-        }),
-      }).then(response => response.json())
-      .then(data => {
-        localStorage.setItem('usercode', data.userCode)
-        setLoader(false);
-      })
-      .catch((error) => {
-      setLoader(false);
-      setError("An error occured, please try again");
-      });
-  }
-
-
-  const confirmToken = (evt) => {
-    evt.preventDefault();
-    setError("");
-    setLoader(true);
-    fetch(`http://10.10.1.74:199/verifyOTP`, {
-      method: 'POST', // or 'PUT'
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "usercode": localStorage.getItem("usercode"), 
-        "token": responseRef.current.value,
-      }),
-    }).then(response => response.json())
-    .then(data => {
-      console.log(data);
-    setLoader(false);
-    if (data.code === "00"){
-      history.push('/');
-    }else{
-      setError("Authentication failed, please try again");
-      history.push('/entrust/validation');
-    }
-    })
-    .catch((error) => {
-    setLoader(false);
-    setError("Authentication failed, please try again");
-    });
-  }
-
-
-
-
-  
+ 
   return (
     <div className="c-app bg c-default-layout flex-row align-items-center">
       <CContainer>
@@ -142,16 +84,15 @@ const Entrust = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm onSubmit={confirmToken}>
-                    <h3 className="py-3" style={{color:"orange"}}>Token Authentication</h3>
-                    <p>Please check your sms or mail for you token</p>
+                  <CForm onSubmit={entrustlogin}>
+                    <h3 className="py-3" style={{color:"orange"}}>Entrust Authentication</h3>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
                         <CInputGroupText>
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="password" innerRef={responseRef} placeholder="Enter your token" autoComplete="response" />
+                      <CInput type="password" innerRef={responseRef} placeholder="Response" autoComplete="response" />
                     </CInputGroup>
                     <CInputGroup className={ error.length > 0 ? "alert alert-danger" : "none" }>
                       <div >{error}</div>
@@ -159,12 +100,8 @@ const Entrust = () => {
                     <CInputGroup className={ loader === true ? "loader" : "none"}>
                     <div >Loading...</div>
                     </CInputGroup>
-                  
                     <CInputGroup className="mb-3">
-                    <CButton onClick={resend} style={{backgroundColor:"orange", borderColor:"orange"}} color="primary" className="px-4 mb-3 w-100">Resend Token</CButton>
-                    <CButton style={{backgroundColor:"orange", borderColor:"orange"}} type="submit" color="primary" className="px-4 w-100">Submit</CButton>
-                      
-                      
+                      <CButton style={{backgroundColor:"orange", borderColor:"orange"}} type="submit" color="primary" className="px-4 w-100">Submit</CButton>
                     </CInputGroup>
                   </CForm>
                 </CCardBody>

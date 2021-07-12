@@ -97,19 +97,17 @@ const Beneficiary = (props) => {
       }).then(response => response.json())
       .then(data => {
         setAccLoader(false)
-        console.log(data);
         if (data.accountName === "INVALID ACCOUNT"){
           setError("INVALID ACCOUNT");
           setAccountname("");
         }else {
-          setAccountname(data.accountName)
+          setAccountname(data.accountName);
         }
         if (evt.target){
           props.handleName(evt,id,data.accountName)
         }
       })
       .catch((error) => {
-      console.error('Error:', error);
       setError("An error occurred");
       });
   }

@@ -19,8 +19,6 @@ const TheLayout = () => {
   }
 
   const handleOnIdle = event => {
-    //console.log('user is idle',)
-    //console.log('last active', getLastActiveTime())
       localStorage.removeItem("stand-order-token")
       history.push("/login");
       NotificationManager.success('User is Idle', 'TimeOut');
@@ -28,8 +26,7 @@ const TheLayout = () => {
   }
 
   const handleOnActive = event => {
-    //console.log('user is active', event)
-    //console.log('time remaining', getRemainingTime())
+   
    
   }
 
