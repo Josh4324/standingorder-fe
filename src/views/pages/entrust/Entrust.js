@@ -1,9 +1,9 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Logo from '../../../assets/logo.svg';
-import { NotificationManager} from 'react-notifications';
-import { useIdleTimer } from 'react-idle-timer';
-import {api_base_url} from '../../../utils/constant';
+import Logo from "../../../assets/logo.svg";
+import { NotificationManager } from "react-notifications";
+import { useIdleTimer } from "react-idle-timer";
+import { api_base_url } from "../../../utils/constant";
 import {
   CButton,
   CCard,
@@ -16,167 +16,131 @@ import {
   CInputGroup,
   CInputGroupPrepend,
   CInputGroupText,
-  CRow
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-
+  CRow,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
 
 const Entrust = () => {
   let history = useHistory();
 
-  const handleOnIdle = event => {
-      localStorage.removeItem("stand-order-token")
-      history.push("/login");
-      NotificationManager.success('User is Idle', 'TimeOut');
-  }
-
+  const handleOnIdle = (event) => {
+    localStorage.removeItem("stand-order-token");
+    history.push("/login");
+    NotificationManager.success("User is Idle", "TimeOut");
+  };
 
   const { getRemainingTime, getLastActiveTime } = useIdleTimer({
     timeout: 1000 * 60 * 1,
     onIdle: handleOnIdle,
-    debounce: 500
-  })
+    debounce: 500,
+  });
 
   const responseRef = useRef();
   const [error, setError] = useState("");
   const [loader, setLoader] = useState(false);
-  const [button, setButton] = useState(false);
- 
+
   const entrustlogin = (evt) => {
+    console.log(responseRef.current.value)
     evt.preventDefault();
     setError("");
     setLoader(true);
     fetch(`${api_base_url}/api/user/auth/securepass`, {
-      method: 'POST', // or 'PUT'
+      method: "POST", // or 'PUT'
       headers: {
-          'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "username": localStorage.getItem("userId"), 
-        "response": responseRef.current.value,
+        username: localStorage.getItem("userId"),
+        response: responseRef.current.value,
       }),
-    }).then(response => response.json())
-    .then(data => {
-    setLoader(false);
-    if (data.responseCode === 200){
-      localStorage.setItem("stand-order-token", data.token);
-      history.push('/');
-    }else{
-      setError("Authentication failed, please try again");
-      history.push('/entrust/validation');
-    }
     })
-    .catch((error) => {
-    setLoader(false);
-    setError("Authentication failed, please try again");
-    });
-  }
-
-  const resend = () => {
-    setLoader(true);
-    setError("");
-    console.log(localStorage.getItem("userId"))
-    fetch(`http://10.10.1.74:199/sendOTP`, {
-        method: 'POST', // or 'PUT'
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          "username": localStorage.getItem("userId")
-        }),
-      }).then(response => response.json())
-      .then(data => {
-        localStorage.setItem('usercode', data.userCode)
+      .then((response) => response.json())
+      .then((data) => {
         setLoader(false);
+        if (data.responseCode === 200) {
+          localStorage.setItem("stand-order-token", data.token);
+          history.push("/");
+        } else {
+          setError("Authentication failed, please try again");
+          history.push("/entrust/validation");
+        }
       })
       .catch((error) => {
-      setLoader(false);
-      setError("An error occured, please try again");
+        setLoader(false);
+        setError("Authentication failed, please try again");
       });
-  }
+  };
 
-
-  const confirmToken = (evt) => {
-    evt.preventDefault();
-    setError("");
-    setLoader(true);
-    fetch(`http://10.10.1.74:199/verifyOTP`, {
-      method: 'POST', // or 'PUT'
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "usercode": localStorage.getItem("usercode"), 
-        "token": responseRef.current.value,
-      }),
-    }).then(response => response.json())
-    .then(data => {
-      console.log(data);
-    setLoader(false);
-    if (data.code === "00"){
-      history.push('/');
-    }else{
-      setError("Authentication failed, please try again");
-      history.push('/entrust/validation');
-    }
-    })
-    .catch((error) => {
-    setLoader(false);
-    setError("Authentication failed, please try again");
-    });
-  }
-
-
-
-
-  
   return (
     <div className="c-app bg c-default-layout flex-row align-items-center">
       <CContainer>
-        <div  style={{marginLeft:"auto",width:"150px", textAlign:"center",marginBottom:"20px", marginRight:"auto"}}>
+        <div
+          style={{
+            marginLeft: "auto",
+            width: "150px",
+            textAlign: "center",
+            marginBottom: "20px",
+            marginRight: "auto",
+          }}
+        >
           <img src={Logo} alt="Providus Bank" width="150px" />
         </div>
         <CRow className="justify-content-center">
-        
           <CCol md="6">
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm onSubmit={confirmToken}>
-                    <h3 className="py-3" style={{color:"orange"}}>Token Authentication</h3>
-                    <p>Please check your sms or mail for you token</p>
+                  <CForm onSubmit={entrustlogin}>
+                    <h3 className="py-3" style={{ color: "orange" }}>
+                      Entrust Authentication
+                    </h3>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
                         <CInputGroupText>
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="password" innerRef={responseRef} placeholder="Enter your token" autoComplete="response" />
+                      <CInput
+                        type="password"
+                        innerRef={responseRef}
+                        placeholder="Response"
+                        autoComplete="response"
+                      />
                     </CInputGroup>
-                    <CInputGroup className={ error.length > 0 ? "alert alert-danger" : "none" }>
-                      <div >{error}</div>
+                    <CInputGroup
+                      className={
+                        error.length > 0 ? "alert alert-danger" : "none"
+                      }
+                    >
+                      <div>{error}</div>
                     </CInputGroup>
-                    <CInputGroup className={ loader === true ? "loader" : "none"}>
-                    <div >Loading...</div>
+                    <CInputGroup
+                      className={loader === true ? "loader" : "none"}
+                    >
+                      <div>Loading...</div>
                     </CInputGroup>
-                  
                     <CInputGroup className="mb-3">
-                    <CButton onClick={resend} style={{backgroundColor:"orange", borderColor:"orange"}} color="primary" className="px-4 mb-3 w-100">Resend Token</CButton>
-                    <CButton style={{backgroundColor:"orange", borderColor:"orange"}} type="submit" color="primary" className="px-4 w-100">Submit</CButton>
-                      
-                      
+                      <CButton
+                        style={{
+                          backgroundColor: "orange",
+                          borderColor: "orange",
+                        }}
+                        type="submit"
+                        color="primary"
+                        className="px-4 w-100"
+                      >
+                        Submit
+                      </CButton>
                     </CInputGroup>
                   </CForm>
                 </CCardBody>
-               
               </CCard>
-              
             </CCardGroup>
           </CCol>
         </CRow>
       </CContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Entrust
+export default Entrust;

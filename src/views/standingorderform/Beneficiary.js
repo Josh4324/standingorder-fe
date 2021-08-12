@@ -216,7 +216,7 @@ const Beneficiary = (props) => {
            
               <CFormGroup>
                 <CLabel htmlFor="standing">STANDING ORDER AMOUNT</CLabel>
-                <CInput id="standing" disabled={disableStand} required onChange={(evt) => props.handleChange(evt, props.id)} name="amount" data-key={props.id}  placeholder="Enter standing order amount" />
+                <CInput id="standing" type="number" disabled={disableStand} required onChange={(evt) => props.handleChange(evt, props.id)} name="amount" data-key={props.id}  placeholder="Enter standing order amount" />
               </CFormGroup>
               <CFormGroup>
                   <CLabel htmlFor="select">FREQUENCY OF PAYMENT</CLabel>

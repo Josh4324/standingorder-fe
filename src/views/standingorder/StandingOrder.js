@@ -30,13 +30,13 @@ const StandingOrder = () => {
   let selectRef = useRef();
 
   let role = localStorage.getItem('role').split(",")
-  //let inputterCheck = role.includes("inputter");
+  let inputterCheck = role.includes("inputter");
   let approverCheck = role.includes("approver");
-  let inputterCheck = false;
+  //let inputterCheck = false;
 
-  if (approverCheck === false){
+  /* if (approverCheck === false){
     history.push("/standingorder/pending")
-  }
+  } */
 
   
   const token = localStorage.getItem('stand-order-token')
