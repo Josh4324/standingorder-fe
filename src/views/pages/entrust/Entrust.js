@@ -40,7 +40,7 @@ const Entrust = () => {
   const [loader, setLoader] = useState(false);
 
   const entrustlogin = (evt) => {
-    console.log(responseRef.current.value)
+    console.log(responseRef.current.value);
     evt.preventDefault();
     setError("");
     setLoader(true);

@@ -19,8 +19,6 @@ import {
 import CIcon from "@coreui/icons-react";
 
 const Login = () => {
-  const token = localStorage.getItem("stand-order-token");
-
   let history = useHistory();
 
   const emailRef = useRef();
